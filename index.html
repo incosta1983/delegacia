@@ -58,11 +58,11 @@
         }
     </style>
 </head>
-<body class="antialiased text-slate-800">
+<body class="antialiased text-slate-800 flex flex-col min-h-screen">
 
-    <div class="container mx-auto p-4">
+    <div class="container mx-auto p-4 flex-grow">
         <header class="text-center mb-6">
-            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">Ferramenta de Consulta Perfis de Delegacia no Eproc </h1>
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">Ferramenta de Consulta - Perfis de Delegacias no Eproc</h1>
             <p class="mt-2 text-lg text-slate-600">Navegue entre o Visualizador de Perfis e o Chatbot Assistente.</p>
         </header>
 
@@ -80,23 +80,31 @@
             
             <!-- Conteúdo do Visualizador de Perfis -->
             <div id="visualizer-content">
-                <div class="card p-6 mb-8">
+                <!-- Card de Filtros com Novo Layout -->
+                <div class="card p-6 mb-8 bg-blue-50 border border-blue-200 shadow-lg">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label for="profile-filter" class="block text-lg font-semibold mb-3 text-slate-700">1. Ver por Perfil:</label>
+                            <label for="profile-filter" class="flex items-center text-lg font-semibold mb-3 text-blue-800">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                                1. Ver por Perfil:
+                            </label>
                             <select id="profile-filter" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
                                 <option value="">-- Selecione um perfil --</option>
                             </select>
                         </div>
                         <div>
-                            <label for="action-filter" class="block text-lg font-semibold mb-3 text-slate-700">OU 2. Ver por Ação:</label>
+                            <label for="action-filter" class="flex items-center text-lg font-semibold mb-3 text-blue-800">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                                OU 2. Ver por Ação:
+                            </label>
                             <select id="action-filter" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
                                 <option value="">-- Selecione uma ação --</option>
                             </select>
                         </div>
                     </div>
-                    <div class="mt-6 border-t pt-6 text-center">
-                         <button id="clear-filters-btn" class="bg-slate-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-slate-700 transition-colors shadow">
+                    <div class="mt-6 border-t border-blue-200 pt-6 text-center">
+                         <button id="clear-filters-btn" class="bg-gradient-to-r from-slate-600 to-slate-800 text-white font-semibold px-6 py-2 rounded-lg hover:from-slate-700 hover:to-slate-900 transition-all shadow-md transform hover:scale-105 flex items-center justify-center mx-auto">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
                             Limpar Filtros
                         </button>
                     </div>
@@ -160,6 +168,16 @@
         </main>
     </div>
 
+    <!-- Rodapé -->
+    <footer class="bg-slate-800 mt-12 py-6">
+        <div class="container mx-auto text-center text-slate-300">
+            <div class="flex flex-col items-center justify-center">
+                <p class="text-sm">Criado pela equipe SGS 2.3.2</p>
+            </div>
+        </div>
+    </footer>
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             
@@ -209,7 +227,7 @@ Consulta Processual;Sim;Sim;Sim;Sim;Sim
 Movimentação Processual;Sim;Não;Sim;Sim;?
 Cadastro de operações da Policia;Sim;Sim;Sim;Sim;Não
 Redistribuição de inquérito;Sim;Sim;Não;Não;Não
-Cadastro de permissão/negação expressa;Sim - através do botão "Permissão/Negação Expressa" pela capa do processo e pelo menu lateral "Permissões Expressas".;"Sim - através do botão "Permissão/Negação Expressa" pela capa do processo e pelo menu lateral "Permissões Expressas".;"Sim - através do botão ""Permissão/Negação Expressa"" pela capa do processo e pelo menu lateral ""Permissões Expressas".;"Sim - através do botão "Permissão/Negação Expressa" pela capa do processo e pelo menu lateral "Permissões Expressas".";Não
+Cadastro de permissão/negação expressa;Sim - através do botão "Permissão/Negação Expressa" pela capa do processo e pelo menu lateral "Permissões Expressas".;Sim - através do botão "Permissão/Negação Expressa" pela capa do processo e pelo menu lateral "Permissões Expressas".;Sim - através do botão "Permissão/Negação Expressa" pela capa do processo e pelo menu lateral "Permissões Expressas".;Sim - através do botão "Permissão/Negação Expressa" pela capa do processo e pelo menu lateral "Permissões Expressas".;Não
 Relatórios;Sim;Sim;Parcial - somente processos nos quais atua;Somente relatório geral - processos nos quais atua;Somene relatório geral - processos nos quais atua`;
             
             const profileDescriptions = {
@@ -339,7 +357,7 @@ Relatórios;Sim;Sim;Parcial - somente processos nos quais atua;Somente relatóri
             }
 
             function formatPermission(permission) {
-                const pLower = permission.toLowerCase();
+                const pLower = permission ? permission.toLowerCase() : '';
                 if (pLower.startsWith('sim')) return `<span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">${permission}</span>`;
                 if (pLower === 'não') return `<span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">${permission}</span>`;
                 if (permission === '?') return `<span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">A definir</span>`;
@@ -368,29 +386,29 @@ Relatórios;Sim;Sim;Parcial - somente processos nos quais atua;Somente relatóri
             const sendBtn = document.getElementById('send-btn');
             const typingIndicator = document.getElementById('typing-indicator');
 
-            const knowledgeBase = [
-                { keywords: ['olá', 'oi', 'ajuda'], response: 'Olá! Sou o assistente de consulta desse aplicativo. Como posso ajudá-lo hoje? Você pode perguntar sobre perfis, cadastro, intimações, sigilo e outros procedimentos.' },
-                { keywords: ['delegado-chefe', 'oficial-chefe'], response: 'O perfil **Delegado-Chefe (PC) ou Oficial-Chefe (PM)** é o principal responsável pela Entidade. Ele recebe as citações, gerencia os integrantes, pode gerenciar todos os processos e cadastrar outros usuários, especialmente o Escrivão-Chefe.' },
-                { keywords: ['escrivão-chefe', 'encarregado-chefe'], response: 'O perfil **Escrivão-Chefe (PC) ou Encarregado-Chefe (PM)** atua como administrador da unidade. Sua principal função é cadastrar e gerenciar os demais usuários da entidade e também organizar o acervo de processos.' },
-                { keywords: ['delegado', 'oficial'], response: 'O perfil **Delegado (PC) ou Oficial (PM)** atua diretamente nos processos aos quais está associado. Ele pode peticionar em inquéritos e processos para dar andamento às investigações.' },
-                { keywords: ['escrivão', 'encarregado'], response: 'O perfil **Escrivão (PC) ou Encarregado (PM)** auxilia a autoridade policial (Delegado/Oficial) nos processos aos quais está vinculado, realizando tarefas de suporte e movimentação processual.' },
-                { keywords: ['perito'], response: 'O **Perito Criminal Federal** tem um perfil de consulta. Ele pode visualizar processos, mas não tem permissão para cadastrar usuários, gerenciar a unidade ou peticionar.' },
-                { keywords: ['cadastrar', 'cadastro', 'novo usuário'], response: 'Para cadastrar um novo usuário, o **Delegado-Chefe ou Escrivão-Chefe** deve ir em "Usuários > Cadastro de Usuários". Primeiro, ele verifica se a pessoa já existe na base de dados pelo CPF. Se não existir, ele prossegue com o cadastro de pessoa física, preenche os dados, define uma sigla e o tipo de usuário (perfil), e por fim, associa o usuário à entidade e às localidades de atuação.' },
-                { keywords: ['acesso', 'login'], response: 'O acesso ao sistema Eproc é feito por um navegador de internet. O usuário insere seu login e senha. O Delegado-Chefe/Oficial-Chefe também pode acessar com Certificado Digital. A autenticação em dois fatores (2FA) é obrigatória para a segurança.' },
-                { keywords: ['2fa', 'autenticação', 'dois fatores'], response: 'A **Autenticação em Dois Fatores (2FA)** é uma camada extra de segurança obrigatória. Para ativá-la, você precisa de um aplicativo autenticador (como Microsoft Authenticator) no seu celular. No Eproc, vá em "Autenticação em dois fatores", leia o QR Code com o app, insira o código gerado e confirme no e-mail que receberá.' },
-                { keywords: ['gerenciamento de processos', 'gerenciar processo'], response: 'O gerenciamento de processos pode ser feito de forma individual ou em bloco. Os perfis de chefia (Delegado-Chefe, Escrivão-Chefe) podem gerenciar qualquer processo da entidade. Os demais perfis gerenciam apenas os processos aos quais estão associados. As principais ações são: **Associar**, **Substituir** e **Desativar**.' },
-                { keywords: ['responder ofício', 'chave de acesso'], response: 'Para responder um ofício recebido com uma chave de acesso, vá na tela inicial do Eproc, clique em "Consulta Pública > Consulta Documento pela Chave". Insira o número do processo e a chave. Na tela seguinte, você poderá anexar o arquivo de resposta em PDF e clicar em "Responder".' },
-                { keywords: ['inquérito', 'cadastrar procedimento'], response: 'Para cadastrar um novo procedimento (Inquérito), acesse o menu "Inquérito". O cadastro é feito em 4 etapas: 1) Informações do Processo (comarca, tipo de ação, sigilo); 2) Assuntos (crime/ato infracional); 3) Partes (incluir a polícia como autora, e depois os indiciados e vítimas); 4) Documentos (anexar os arquivos do procedimento).' },
-                { keywords: ['intimação', 'receber intimação', 'abrir prazo'], response: 'As intimações chegam no painel da polícia, no localizador "Citações/Intimações". Para ver o conteúdo, clique no número do processo. Isso NÃO abre o prazo. O prazo pode ser aberto manualmente clicando em "Abrir Prazo" na lista de intimações, ou ele abrirá automaticamente após 10 dias corridos.' },
-                { keywords: ['tramitação direta', 'td'], response: 'A **Tramitação Direta (TD)** é um fluxo onde Inquéritos Policiais (sem réu preso) e Termos Circunstanciados tramitam diretamente entre a Polícia e o Ministério Público, sem intervenção judicial imediata. O processo é distribuído para definir a competência, mas logo em seguida vai para o painel da polícia para o impulso inicial.' },
-                { keywords: ['dilação de prazo'], response: 'Para pedir mais tempo para concluir um inquérito em Tramitação Direta, acesse o processo, clique em "Movimentar/Peticionar" e use o evento **"Pedido de Dilação de Prazo"**. Anexe um documento justificando e envie. O pedido irá para a análise do Ministério Público.' },
-                { keywords: ['relatório final'], response: 'Ao concluir um inquérito, use o evento **"Relatório Final IPL"**. Acesse o processo, clique em "Movimentar/Peticionar", selecione este evento e anexe o relatório final. O processo será então enviado ao Ministério Público para as providências cabíveis (denúncia, arquivamento, etc.).' },
-                { keywords: ['bens', 'apreendido', 'cadastrar bem'], response: 'Ao cadastrar um inquérito, você deve informar se há bens apreendidos. Se marcar "Sim", o processo recebe a tarja **"Bem Associado Pendente de Cadastro"** e não pode ser arquivado até a regularização. Para solicitar a destinação de um bem, use o evento "Pedido de Destinação de Bem".' },
-                { keywords: ['sigilo', 'segredo de justiça', 'nível de sigilo'], response: 'O Eproc possui 5 níveis de sigilo: **Nível 0** (Público), **Nível 1** (Segredo de Justiça, restrito às partes), **Nível 2** (Restrito a entidades como Polícia e MP, advogados precisam de permissão), **Nível 3 e 4** (Acesso restrito a servidores específicos da unidade judicial), e **Nível 5** (Sigilo máximo, acesso apenas ao juiz e quem propôs a medida, usado em casos excepcionais como quebras de sigilo).' },
-                { keywords: ['advogado', 'vincular advogado'], response: 'Quando um advogado peticiona em um inquérito em Tramitação Direta, a delegacia deve vinculá-lo. Acesse o processo, clique em "Associar Procurador Parte", selecione a parte (indiciado) e clique no ícone "+". Busque o advogado pela OAB ou nome, clique em "Incluir" e depois em "Confirmar Associação".' },
-                { keywords: ['obrigado', 'obrigada', 'valeu'], response: 'De nada! Se precisar de mais alguma informação, é só perguntar.' }
-            ];
-            const defaultResponse = "Desculpe, não encontrei informações sobre isso nos manuais. Poderia tentar perguntar de outra forma? Lembre-se que meu conhecimento é limitado aos PDFs fornecidos.";
+            const welcomeMessage = 'Olá! Sou o assistente de consulta desse aplicativo. Como posso ajudá-lo hoje? Você pode perguntar sobre perfis, cadastro, intimações, sigilo e outros procedimentos.';
+            const errorMessage = 'Desculpe, ocorreu um erro ao processar sua pergunta. Por favor, tente novamente.';
+            
+            const contexto_pdfs = `
+                Resumo dos Manuais do Sistema Eproc para a Polícia:
+
+                ### Perfis de Usuário:
+                - **Delegado-Chefe/Oficial-Chefe:** Responsável máximo pela Unidade Policial (Entidade), recebe citações, gerencia todos os processos e usuários.
+                - **Escrivão-Chefe/Encarregado-Chefe:** Administrador da unidade, cadastra e gerencia usuários, organiza o acervo de processos.
+                - **Delegado/Oficial:** Atua diretamente nos processos aos quais está associado, peticionando em inquéritos.
+                - **Escrivão/Encarregado:** Auxilia a autoridade policial nos processos em que está vinculado.
+                - **Perito Criminal Federal:** Perfil de consulta, não pode gerenciar ou peticionar.
+
+                ### Procedimentos Comuns:
+                - **Cadastro de Novo Usuário:** Feito por perfis de chefia no menu "Usuários > Cadastro de Usuários". É necessário consultar o CPF primeiro.
+                - **Cadastro de Inquérito:** Pelo menu "Inquérito". Ocorre em 4 etapas: 1) Informações do Processo (comarca, tipo de ação, sigilo); 2) Assuntos (crime/ato infracional); 3) Partes (Polícia como autora, indiciados, vítimas); 4) Anexo de Documentos.
+                - **Recebimento de Intimações:** As intimações aparecem no painel, no localizador "Citações/Intimações". O prazo para resposta abre ao clicar em "Abrir Prazo" ou automaticamente após 10 dias corridos.
+                - **Peticionamento (Resposta):** Na capa do processo, clicar em "Movimentar/Peticionar". Deve-se escolher o evento correto (ex: "LAUDO PERICIAL"), selecionar o prazo a ser fechado e anexar os documentos. Para apenas dar ciência sem responder, usa-se o evento "CIÊNCIA, COM RENÚNCIA AO PRAZO".
+                - **Tramitação Direta (TD):** É um fluxo especial para Inquéritos Policiais (sem réu preso) e Termos Circunstanciados, que tramitam diretamente entre a Polícia e o Ministério Público (MP) sem passar pelo juiz inicialmente. A comunicação com o MP usa eventos como "Pedido de Dilação de Prazo", "Relatório Final IPL" e "Apreciação MP". Para enviar ao juiz, usa-se "Apreciação Judicial".
+                - **Gestão de Bens Apreendidos:** Ao cadastrar um inquérito, deve-se informar se há bens apreendidos. Se a resposta for "Sim", o processo recebe a tarja "Bem Associado Pendente de Cadastro" e não pode ser arquivado até a regularização dos bens.
+                - **Níveis de Sigilo:** Existem 5 níveis. Nível 0 é público. Nível 1 é Segredo de Justiça (restrito às partes). Nível 2 é mais restrito (advogados precisam de permissão). Níveis 3 e 4 são para uso interno do judiciário. Nível 5 é o sigilo máximo para casos excepcionais (ex: quebra de sigilo), com acesso apenas ao juiz e a quem pediu a medida.
+                - **Vincular Advogado a um Processo:** Na capa do processo, clicar em "Associar Procurador Parte", selecionar a parte (ex: indiciado), clicar no ícone "+", buscar o advogado pela OAB ou nome e confirmar a associação.
+            `;
 
             function addChatMessage(message, sender) {
                 const messageDiv = document.createElement('div');
@@ -409,29 +427,49 @@ Relatórios;Sim;Sim;Parcial - somente processos nos quais atua;Somente relatóri
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
-            function findResponse(query) {
-                const lowerCaseQuery = query.toLowerCase();
-                for (const item of knowledgeBase) {
-                    for (const keyword of item.keywords) {
-                        if (lowerCaseQuery.includes(keyword)) {
-                            return item.response;
-                        }
+            async function getLLMResponse(userQuery) {
+                const prompt = `Você é um assistente especializado no sistema Eproc para a polícia. Responda a pergunta do usuário de forma clara e objetiva, baseando-se exclusivamente no seguinte contexto dos manuais. Se a resposta não estiver no contexto, diga que não encontrou a informação. Responda em português do Brasil.\n\n--- CONTEXTO ---\n${contexto_pdfs}\n\n--- PERGUNTA ---\n${userQuery}`;
+                
+                let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                const payload = { contents: chatHistory };
+                const apiKey = ""; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        return result.candidates[0].content.parts[0].text;
+                    } else {
+                        return "Não consegui gerar uma resposta. A estrutura do retorno foi inesperada.";
+                    }
+                } catch (error) {
+                    console.error("Error calling LLM API:", error);
+                    return errorMessage;
                 }
-                return defaultResponse;
             }
 
-            function handleUserMessage() {
+            async function handleUserMessage() {
                 const userQuery = userInput.value.trim();
                 if (userQuery === '') return;
+
                 addChatMessage(userQuery, 'user');
                 userInput.value = '';
                 typingIndicator.classList.remove('hidden');
-                setTimeout(() => {
-                    const botResponse = findResponse(userQuery);
-                    typingIndicator.classList.add('hidden');
-                    addChatMessage(botResponse, 'bot');
-                }, 1200);
+
+                const botResponse = await getLLMResponse(userQuery);
+                
+                typingIndicator.classList.add('hidden');
+                addChatMessage(botResponse, 'bot');
             }
 
             sendBtn.addEventListener('click', handleUserMessage);
@@ -440,7 +478,7 @@ Relatórios;Sim;Sim;Parcial - somente processos nos quais atua;Somente relatóri
             });
 
             // Inicia o chatbot com a mensagem de boas-vindas
-            addChatMessage(knowledgeBase[0].response, 'bot');
+            addChatMessage(welcomeMessage, 'bot');
         });
     </script>
 </body>
