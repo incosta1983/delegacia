@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador e Chatbot - Eproc</title>
+    <!-- Incluindo Tailwind CSS para estilização -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+        .table-header {
+            background-color: #f8fafc;
+        }
+        /* Estilos do Chatbot */
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 70vh;
+        }
+        #chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        #chat-messages::-webkit-scrollbar {
+            width: 8px;
+        }
+        #chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+        #chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* Estilos para abas de navegação */
+        .nav-button {
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-button.active {
+            border-bottom-color: #3b82f6; /* blue-500 */
+            color: #1e40af; /* blue-800 */
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="antialiased text-slate-800">
+
+    <div class="container mx-auto p-4">
+        <header class="text-center mb-6">
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-900">Ferramenta de Consulta Eproc</h1>
+            <p class="mt-2 text-lg text-slate-600">Navegue entre o Visualizador de Perfis e o Chatbot Assistente.</p>
+        </header>
+
+        <!-- Navegação Principal -->
+        <nav class="flex justify-center border-b-2 border-slate-200 mb-8">
+            <button id="nav-visualizer" class="nav-button active text-lg px-6 py-3 border-b-4 border-transparent">
+                Visualizador de Perfis
+            </button>
+            <button id="nav-chatbot" class="nav-button text-lg px-6 py-3 border-b-4 border-transparent">
+                Chatbot Assistente
+            </button>
+        </nav>
+
+        <main class="max-w-5xl mx-auto">
+            
+            <!-- Conteúdo do Visualizador de Perfis -->
+            <div id="visualizer-content">
+                <div class="card p-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="profile-filter" class="block text-lg font-semibold mb-3 text-slate-700">1. Ver por Perfil:</label>
+                            <select id="profile-filter" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                                <option value="">-- Selecione um perfil --</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="action-filter" class="block text-lg font-semibold mb-3 text-slate-700">OU 2. Ver por Ação:</label>
+                            <select id="action-filter" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition">
+                                <option value="">-- Selecione uma ação --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mt-6 border-t pt-6 text-center">
+                         <button id="clear-filters-btn" class="bg-slate-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-slate-700 transition-colors shadow">
+                            Limpar Filtros
+                        </button>
+                    </div>
+                </div>
+                <div id="summary-card" class="card p-6 mb-8 hidden">
+                    <h3 id="summary-title" class="text-2xl font-bold text-blue-600 mb-3"></h3>
+                    <p id="summary-description" class="text-base text-slate-700 leading-relaxed"></p>
+                </div>
+                <div id="results-card" class="card overflow-hidden">
+                    <div id="results-header" class="p-6 border-b border-slate-200 hidden">
+                         <h2 id="results-title" class="text-2xl font-bold text-slate-800">Resultados</h2>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-left text-sm sm:text-base">
+                            <thead id="table-head" class="table-header"></thead>
+                            <tbody id="results-table">
+                                <tr id="empty-state">
+                                    <td colspan="2" class="text-center p-10">
+                                        <svg class="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path vector-effect="non-scaling-stroke" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                        <h3 class="mt-2 text-sm font-medium text-slate-900">Aguardando sua seleção</h3>
+                                        <p class="mt-1 text-sm text-slate-500">Escolha um perfil ou uma ação para começar.</p>
+                                    </td>
+                                </tr>
+                                <tr id="no-results-state" class="hidden">
+                                    <td colspan="2" class="text-center p-10">
+                                        <svg class="mx-auto h-12 w-12 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        <h3 class="mt-2 text-sm font-medium text-slate-900">Nenhum resultado encontrado</h3>
+                                        <p class="mt-1 text-sm text-slate-500">Tente ajustar seus filtros.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo do Chatbot -->
+            <div id="chatbot-content" class="hidden">
+                 <div id="chat-container" class="bg-white rounded-xl shadow-lg w-full max-w-4xl mx-auto">
+                    <div id="chat-messages" class="p-6 space-y-4"></div>
+                    <div id="typing-indicator" class="px-6 pb-2 hidden">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-2 h-2 bg-slate-400 rounded-full animate-pulse"></div>
+                            <div class="w-2 h-2 bg-slate-400 rounded-full animate-pulse" style="animation-delay: 0.2s;"></div>
+                            <div class="w-2 h-2 bg-slate-400 rounded-full animate-pulse" style="animation-delay: 0.4s;"></div>
+                            <span class="text-sm text-slate-500">Eproc-bot está a digitar...</span>
+                        </div>
+                    </div>
+                    <div class="p-4 border-t border-slate-200">
+                        <div class="flex items-center space-x-3">
+                            <input type="text" id="user-input" placeholder="Digite a sua pergunta aqui..." class="flex-grow p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition">
+                            <button id="send-btn" class="bg-blue-600 text-white font-semibold px-5 py-3 rounded-lg hover:bg-blue-700 transition-colors shadow flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                                Enviar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- LÓGICA DE NAVEGAÇÃO ENTRE ABAS ---
+            const navVisualizer = document.getElementById('nav-visualizer');
+            const navChatbot = document.getElementById('nav-chatbot');
+            const visualizerContent = document.getElementById('visualizer-content');
+            const chatbotContent = document.getElementById('chatbot-content');
+
+            navVisualizer.addEventListener('click', () => {
+                visualizerContent.classList.remove('hidden');
+                chatbotContent.classList.add('hidden');
+                navVisualizer.classList.add('active');
+                navChatbot.classList.remove('active');
+            });
+
+            navChatbot.addEventListener('click', () => {
+                visualizerContent.classList.add('hidden');
+                chatbotContent.classList.remove('hidden');
+                navVisualizer.classList.remove('active');
+                navChatbot.classList.add('active');
+            });
+
+
+            // --- LÓGICA DO VISUALIZADOR DE PERFIS ---
+            const profileFilter = document.getElementById('profile-filter');
+            const actionFilter = document.getElementById('action-filter');
+            const clearFiltersBtn = document.getElementById('clear-filters-btn');
+            const summaryCard = document.getElementById('summary-card');
+            const summaryTitle = document.getElementById('summary-title');
+            const summaryDesc = document.getElementById('summary-description');
+            const resultsCard = document.getElementById('results-card');
+            const resultsHeader = document.getElementById('results-header');
+            const resultsTitle = document.getElementById('results-title');
+            const tableHead = document.getElementById('table-head');
+            const resultsTable = document.getElementById('results-table');
+            const emptyStateRow = document.getElementById('empty-state');
+            const noResultsRow = document.getElementById('no-results-state');
+
+            const csvData = `Ações;Delegado/Oficial - Chefe;Escrivão/ Encarregado - Chefe;Delegado/Oficial;Escrivão/Encarregado;Perito Criminal Federal\nCadastra outros usuários;Sim;Sim;Não;Não;Não\nPeticiona inquérito;Não;Não;Sim;Sim;Não\nPeticiona no processo;Sim;Sim;Sim;Sim;Sim\nGerenciamento da Unidade;Sim;Sim;Não;Não;Não\nGerenciamento dos processos;Sim - incluindo alocando todos os processos de um usuário para outro;Sim;Sim;Parcial - somente processos alocados para ele;Parcial - somente processos alocados para ele\nConsulta Processual;Sim;Sim;Sim;Sim;Sim\nMovimentação Processual;Sim;Não;Sim;Sim;?\nCadastro de operações da Policia;Sim;Sim;Sim;Sim;Não\nRedistribui inquerito;Sim;Sim;Não;Não;Não\nCadastro de permissão/negação expressa;Sim/capa e menu;Sim/na capa;Sim/ na capa;Sim / na capa;Não\nRelatórios;Sim;Sim;Parcial - somente processos nos quais atua;Somente relatório geral - processos nos quais atua;Somene relatório geral - processos nos quais atua`;
+            const profileDescriptions = {
+              'Delegado/Oficial - Chefe': 'Recebe as citações e é o principal responsável pela Entidade (Unidade Policial) e por todos os seus integrantes. Pode gerenciar todos os processos, usuários e possui a visão mais ampla do sistema.',
+              'Escrivão/ Encarregado - Chefe': 'Atua como o principal administrador da unidade. É responsável por cadastrar novos usuários, gerenciar o quadro de servidores na plataforma e organizar o acervo de processos da entidade.',
+              'Delegado/Oficial': 'Atua diretamente nos processos judiciais aos quais está formalmente associado, realizando petições e outras movimentações processuais necessárias para o andamento dos inquéritos e procedimentos.',
+              'Escrivão/Encarregado': 'Presta auxílio direto à autoridade policial (Delegado/Oficial) nos processos em que está vinculado, executando tarefas de suporte e movimentação processual sob sua alçada.',
+              'Perito Criminal Federal': 'Perfil essencialmente de consulta. Possui acesso para visualização de processos, mas não detém permissões para cadastro de usuários, gerenciamento de unidades ou peticionamento no sistema.'
+            };
+            const actionDescriptions = {
+                'Cadastra outros usuários': 'Permite criar novos logins e senhas para outros membros da equipe, definindo seus perfis e permissões de acesso ao sistema eproc.',
+                'Peticiona inquérito': 'Capacidade de submeter documentos, manifestações e requerimentos diretamente nos autos de um inquérito policial eletrônico.',
+                'Peticiona no processo': 'Refere-se à habilidade de protocolar petições e outros documentos em processos judiciais gerais que tramitam no eproc, não se limitando a inquéritos.',
+                'Gerenciamento da Unidade': 'Funções administrativas sobre a unidade policial no sistema, como a gestão do quadro de usuários (associar/desassociar) e a definição de chefias.',
+                'Gerenciamento dos processos': 'Controle sobre o fluxo dos processos, incluindo a associação de responsáveis, substituição de usuários em um ou mais casos e a desativação de acesso a processos específicos.',
+                'Consulta Processual': 'Acesso à base de dados de processos para busca e visualização de informações, andamentos e documentos, respeitando os níveis de sigilo.',
+                'Movimentação Processual': 'Execução de atos que impulsionam o processo, como o envio para outras instâncias, resposta a ofícios ou o cumprimento de determinações judiciais.',
+                'Cadastro de operações da Policia': 'Permissão para registrar no sistema novas operações policiais, vinculando-as a procedimentos ou inquéritos existentes.',
+                'Redistribui inquerito': 'Ato de transferir a responsabilidade de um inquérito policial de um usuário ou setor para outro dentro da mesma entidade ou para outra localidade.',
+                'Cadastro de permissão/negação expressa': 'Funcionalidade para conceder ou revogar, de forma individualizada, o acesso de um usuário a um processo específico, sobrepondo-se às regras gerais de permissão.',
+                'Relatórios': 'Habilidade de extrair dados do sistema em formato de relatório, como listas de processos por período, por usuário, ou relatórios de produtividade e movimentação.'
+            };
+
+            const lines = csvData.trim().split('\n');
+            const headers = lines[0].split(';');
+            const profiles = headers.slice(1);
+            const actionsData = [];
+            const actionNames = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(';');
+                const actionName = values[0];
+                actionNames.push(actionName);
+                const action = { name: actionName };
+                for (let j = 1; j < headers.length; j++) {
+                    action[headers[j]] = values[j] || 'Não informado';
+                }
+                actionsData.push(action);
+            }
+
+            profiles.forEach(profile => {
+                const option = document.createElement('option');
+                option.value = profile;
+                option.textContent = profile;
+                profileFilter.appendChild(option);
+            });
+            
+            actionNames.sort((a, b) => a.localeCompare(b));
+            actionNames.forEach(actionName => {
+                const option = document.createElement('option');
+                option.value = actionName;
+                option.textContent = actionName;
+                actionFilter.appendChild(option);
+            });
+
+            function updateVisualizerView() {
+                const selectedProfile = profileFilter.value;
+                const selectedAction = actionFilter.value;
+
+                summaryCard.classList.add('hidden');
+                resultsHeader.classList.add('hidden');
+                emptyStateRow.style.display = 'none';
+                noResultsRow.classList.add('hidden');
+                tableHead.innerHTML = '';
+                resultsTable.innerHTML = '';
+
+                if (!selectedProfile && !selectedAction) {
+                    resultsTable.appendChild(emptyStateRow);
+                    emptyStateRow.style.display = 'table-row';
+                    return;
+                }
+                
+                let rowsGenerated = 0;
+                resultsHeader.classList.remove('hidden');
+
+                if (selectedProfile) {
+                    const description = profileDescriptions[selectedProfile];
+                    if (description) {
+                        summaryTitle.textContent = selectedProfile;
+                        summaryDesc.textContent = description;
+                        summaryCard.classList.remove('hidden');
+                    }
+                    resultsTitle.textContent = `Permissões Detalhadas para: ${selectedProfile}`;
+                    tableHead.innerHTML = `<tr><th scope="col" class="px-6 py-4 font-semibold text-slate-900">Ação</th><th scope="col" class="px-6 py-4 font-semibold text-slate-900">Permissão</th></tr>`;
+                    actionsData.forEach(action => {
+                        const row = createRow(action.name, action[selectedProfile]);
+                        resultsTable.appendChild(row);
+                        rowsGenerated++;
+                    });
+                } else if (selectedAction) {
+                    const description = actionDescriptions[selectedAction];
+                     if (description) {
+                        summaryTitle.textContent = selectedAction;
+                        summaryDesc.textContent = description;
+                        summaryCard.classList.remove('hidden');
+                    }
+                    resultsTitle.textContent = `Perfis com permissão para: ${selectedAction}`;
+                    tableHead.innerHTML = `<tr><th scope="col" class="px-6 py-4 font-semibold text-slate-900">Perfil</th><th scope="col" class="px-6 py-4 font-semibold text-slate-900">Permissão</th></tr>`;
+                    const actionDetails = actionsData.find(a => a.name === selectedAction);
+                    if (actionDetails) {
+                        profiles.forEach(profile => {
+                            const row = createRow(profile, actionDetails[profile]);
+                            resultsTable.appendChild(row);
+                            rowsGenerated++;
+                        });
+                    }
+                }
+
+                if (rowsGenerated === 0) {
+                    resultsTable.appendChild(noResultsRow);
+                    noResultsRow.classList.remove('hidden');
+                }
+            }
+            
+            function createRow(cell1Text, cell2Text) {
+                const row = document.createElement('tr');
+                row.classList.add('border-b', 'border-slate-200', 'hover:bg-slate-50');
+                const cell1 = document.createElement('td');
+                cell1.textContent = cell1Text;
+                cell1.classList.add('px-6', 'py-4', 'font-medium', 'text-slate-900');
+                const cell2 = document.createElement('td');
+                cell2.classList.add('px-6', 'py-4');
+                cell2.innerHTML = formatPermission(cell2Text);
+                row.appendChild(cell1);
+                row.appendChild(cell2);
+                return row;
+            }
+
+            function formatPermission(permission) {
+                const pLower = permission.toLowerCase();
+                if (pLower.startsWith('sim')) return `<span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">${permission}</span>`;
+                if (pLower === 'não') return `<span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">${permission}</span>`;
+                if (permission === '?') return `<span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">A definir</span>`;
+                return `<span class="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700 ring-1 ring-inset ring-blue-700/10">${permission}</span>`;
+            }
+
+            profileFilter.addEventListener('change', () => {
+                if (profileFilter.value) actionFilter.value = '';
+                updateVisualizerView();
+            });
+            actionFilter.addEventListener('change', () => {
+                if (actionFilter.value) profileFilter.value = '';
+                updateVisualizerView();
+            });
+            clearFiltersBtn.addEventListener('click', () => {
+                profileFilter.value = '';
+                actionFilter.value = '';
+                updateVisualizerView();
+            });
+            updateVisualizerView();
+
+
+            // --- LÓGICA DO CHATBOT ---
+            const chatMessages = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            const typingIndicator = document.getElementById('typing-indicator');
+
+            const knowledgeBase = [
+                { keywords: ['olá', 'oi', 'ajuda'], response: 'Olá! Sou o assistente de consulta do Eproc. Como posso ajudá-lo hoje? Você pode perguntar sobre perfis, como "O que faz um Delegado-Chefe?", ou sobre procedimentos, como "Como cadastrar um novo usuário?".' },
+                { keywords: ['delegado-chefe', 'oficial-chefe'], response: 'O perfil **Delegado-Chefe (PC) ou Oficial-Chefe (PM)** é o principal responsável pela Entidade. Ele recebe as citações, gerencia os integrantes, pode gerenciar todos os processos e cadastrar outros usuários, especialmente o Escrivão-Chefe.' },
+                { keywords: ['escrivão-chefe', 'encarregado-chefe'], response: 'O perfil **Escrivão-Chefe (PC) ou Encarregado-Chefe (PM)** atua como administrador da unidade. Sua principal função é cadastrar e gerenciar os demais usuários da entidade e também organizar o acervo de processos.' },
+                { keywords: ['delegado', 'oficial'], response: 'O perfil **Delegado (PC) ou Oficial (PM)** atua diretamente nos processos aos quais está associado. Ele pode peticionar em inquéritos e processos para dar andamento às investigações.' },
+                { keywords: ['escrivão', 'encarregado'], response: 'O perfil **Escrivão (PC) ou Encarregado (PM)** auxilia a autoridade policial (Delegado/Oficial) nos processos aos quais está vinculado, realizando tarefas de suporte e movimentação processual.' },
+                { keywords: ['perito'], response: 'O **Perito Criminal Federal** tem um perfil de consulta. Ele pode visualizar processos, mas não tem permissão para cadastrar usuários, gerenciar a unidade ou peticionar.' },
+                { keywords: ['cadastrar', 'cadastro', 'novo usuário'], response: 'Para cadastrar um novo usuário, o **Delegado-Chefe ou Escrivão-Chefe** deve ir em "Usuários > Cadastro de Usuários". Primeiro, ele verifica se a pessoa já existe na base de dados pelo CPF. Se não existir, ele prossegue com o cadastro de pessoa física, preenche os dados, define uma sigla e o tipo de usuário (perfil), e por fim, associa o usuário à entidade e às localidades de atuação.' },
+                { keywords: ['acesso', 'login'], response: 'O acesso ao sistema Eproc é feito por um navegador de internet. O usuário insere seu login e senha. O Delegado-Chefe/Oficial-Chefe também pode acessar com Certificado Digital. A autenticação em dois fatores (2FA) é obrigatória para a segurança.' },
+                { keywords: ['2fa', 'autenticação', 'dois fatores'], response: 'A **Autenticação em Dois Fatores (2FA)** é uma camada extra de segurança obrigatória. Para ativá-la, você precisa de um aplicativo autenticador (como Microsoft Authenticator) no seu celular. No Eproc, vá em "Autenticação em dois fatores", leia o QR Code com o app, insira o código gerado e confirme no e-mail que receberá.' },
+                { keywords: ['gerenciamento de processos', 'gerenciar processo'], response: 'O gerenciamento de processos pode ser feito de forma individual ou em bloco. Os perfis de chefia (Delegado-Chefe, Escrivão-Chefe) podem gerenciar qualquer processo da entidade. Os demais perfis gerenciam apenas os processos aos quais estão associados. As principais ações são: **Associar**, **Substituir** e **Desativar**.' },
+                { keywords: ['responder ofício', 'chave de acesso'], response: 'Para responder um ofício recebido com uma chave de acesso, vá na tela inicial do Eproc, clique em "Consulta Pública > Consulta Documento pela Chave". Insira o número do processo e a chave. Na tela seguinte, você poderá anexar o arquivo de resposta em PDF e clicar em "Responder".' },
+                { keywords: ['obrigado', 'obrigada', 'valeu'], response: 'De nada! Se precisar de mais alguma informação, é só perguntar.' }
+            ];
+            const defaultResponse = "Desculpe, não encontrei informações sobre isso nos manuais. Poderia tentar perguntar de outra forma? Lembre-se que meu conhecimento é limitado aos PDFs fornecidos.";
+
+            function addChatMessage(message, sender) {
+                const messageDiv = document.createElement('div');
+                const bubbleDiv = document.createElement('div');
+                bubbleDiv.innerHTML = message; // Usar innerHTML para renderizar o negrito
+                bubbleDiv.classList.add('p-3', 'rounded-xl', 'max-w-lg');
+                if (sender === 'user') {
+                    messageDiv.classList.add('flex', 'justify-end');
+                    bubbleDiv.classList.add('bg-blue-500', 'text-white');
+                } else {
+                    messageDiv.classList.add('flex', 'justify-start');
+                    bubbleDiv.classList.add('bg-slate-200', 'text-slate-800');
+                }
+                messageDiv.appendChild(bubbleDiv);
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function findResponse(query) {
+                const lowerCaseQuery = query.toLowerCase();
+                for (const item of knowledgeBase) {
+                    for (const keyword of item.keywords) {
+                        if (lowerCaseQuery.includes(keyword)) {
+                            return item.response;
+                        }
+                    }
+                }
+                return defaultResponse;
+            }
+
+            function handleUserMessage() {
+                const userQuery = userInput.value.trim();
+                if (userQuery === '') return;
+                addChatMessage(userQuery, 'user');
+                userInput.value = '';
+                typingIndicator.classList.remove('hidden');
+                setTimeout(() => {
+                    const botResponse = findResponse(userQuery);
+                    typingIndicator.classList.add('hidden');
+                    addChatMessage(botResponse, 'bot');
+                }, 1200);
+            }
+
+            sendBtn.addEventListener('click', handleUserMessage);
+            userInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') handleUserMessage();
+            });
+
+            // Inicia o chatbot com a mensagem de boas-vindas
+            addChatMessage(knowledgeBase[0].response, 'bot');
+        });
+    </script>
+</body>
+</html>
