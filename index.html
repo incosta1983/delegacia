@@ -199,7 +199,19 @@
             const emptyStateRow = document.getElementById('empty-state');
             const noResultsRow = document.getElementById('no-results-state');
 
-            const csvData = `Ações;Delegado/Oficial - Chefe;Escrivão/ Encarregado - Chefe;Delegado/Oficial;Escrivão/Encarregado;Perito Criminal Federal\nCadastra outros usuários;Sim;Sim;Não;Não;Não\nPeticiona inquérito;Não;Não;Sim;Sim;Não\nPeticiona no processo;Sim;Sim;Sim;Sim;Sim\nGerenciamento da Unidade;Sim;Sim;Não;Não;Não\nGerenciamento dos processos;Sim - incluindo alocando todos os processos de um usuário para outro;Sim;Sim;Parcial - somente processos alocados para ele;Parcial - somente processos alocados para ele\nConsulta Processual;Sim;Sim;Sim;Sim;Sim\nMovimentação Processual;Sim;Não;Sim;Sim;?\nCadastro de operações da Policia;Sim;Sim;Sim;Sim;Não\nRedistribui inquerito;Sim;Sim;Não;Não;Não\nCadastro de permissão/negação expressa;Sim/capa e menu;Sim/na capa;Sim/ na capa;Sim / na capa;Não\nRelatórios;Sim;Sim;Parcial - somente processos nos quais atua;Somente relatório geral - processos nos quais atua;Somene relatório geral - processos nos quais atua`;
+            const csvData = `Ações;Delegado/Oficial - Chefe;Escrivão/ Encarregado - Chefe;Delegado/Oficial;Escrivão/Encarregado;Perito Criminal Federal
+Cadastro de Usuários;Sim;Sim;Não;Não;Não
+Peticionamento em inquérito;Não;Não;Sim;Sim;Não
+Peticionamento intermediário em processos;Sim;Sim;Sim;Sim;Sim
+Gerenciamento da Unidade;Sim;Sim;Não;Não;Não
+Gerenciamento de processos;Sim - incluindo ou alocando todos os processos de um usuário para outro.;Sim;Sim;Parcial - somente processos alocados para ele;Parcial - somente processos alocados para ele
+Consulta Processual;Sim;Sim;Sim;Sim;Sim
+Movimentação Processual;Sim;Não;Sim;Sim;?
+Cadastro de operações da Policia;Sim;Sim;Sim;Sim;Não
+Redistribuição de inquérito;Sim;Sim;Não;Não;Não
+Cadastro de permissão/negação expressa;Sim - através do botão "Permissão/Negação Expressa" pela capa do processo e pelo menu lateral "Permissões Expressas".;"Sim - através do botão "Permissão/Negação Expressa" pela capa do processo e pelo menu lateral "Permissões Expressas".;"Sim - através do botão ""Permissão/Negação Expressa"" pela capa do processo e pelo menu lateral ""Permissões Expressas".;"Sim - através do botão "Permissão/Negação Expressa" pela capa do processo e pelo menu lateral "Permissões Expressas".";Não
+Relatórios;Sim;Sim;Parcial - somente processos nos quais atua;Somente relatório geral - processos nos quais atua;Somene relatório geral - processos nos quais atua`;
+            
             const profileDescriptions = {
               'Delegado/Oficial - Chefe': 'Recebe as citações e é o principal responsável pela Entidade (Unidade Policial) e por todos os seus integrantes. Pode gerenciar todos os processos, usuários e possui a visão mais ampla do sistema.',
               'Escrivão/ Encarregado - Chefe': 'Atua como o principal administrador da unidade. É responsável por cadastrar novos usuários, gerenciar o quadro de servidores na plataforma e organizar o acervo de processos da entidade.',
@@ -208,16 +220,16 @@
               'Perito Criminal Federal': 'Perfil essencialmente de consulta. Possui acesso para visualização de processos, mas não detém permissões para cadastro de usuários, gerenciamento de unidades ou peticionamento no sistema.'
             };
             const actionDescriptions = {
-                'Cadastra outros usuários': 'Permite criar novos logins e senhas para outros membros da equipe, definindo seus perfis e permissões de acesso ao sistema eproc.',
-                'Peticiona inquérito': 'Capacidade de submeter documentos, manifestações e requerimentos diretamente nos autos de um inquérito policial eletrônico.',
-                'Peticiona no processo': 'Refere-se à habilidade de protocolar petições e outros documentos em processos judiciais gerais que tramitam no eproc, não se limitando a inquéritos.',
+                'Cadastro de Usuários': 'Permite criar novos logins e senhas para outros membros da equipe, definindo seus perfis e permissões de acesso ao sistema eproc. Também é possível reinicializar senha de usuários cadastrados.',
+                'Peticionamento em inquérito': 'Capacidade de submeter documentos, manifestações e requerimentos diretamente nos autos de um inquérito policial eletrônico.',
+                'Peticionamento intermediário em processos': 'Refere-se à habilidade de protocolar petições e outros documentos em processos judiciais gerais que tramitam no eproc, não se limitando a inquéritos.',
                 'Gerenciamento da Unidade': 'Funções administrativas sobre a unidade policial no sistema, como a gestão do quadro de usuários (associar/desassociar) e a definição de chefias.',
-                'Gerenciamento dos processos': 'Controle sobre o fluxo dos processos, incluindo a associação de responsáveis, substituição de usuários em um ou mais casos e a desativação de acesso a processos específicos.',
+                'Gerenciamento de processos': 'Controle sobre o fluxo dos processos, incluindo a associação de responsáveis, substituição de usuários em um ou mais casos e a desativação de acesso a processos específicos.',
                 'Consulta Processual': 'Acesso à base de dados de processos para busca e visualização de informações, andamentos e documentos, respeitando os níveis de sigilo.',
                 'Movimentação Processual': 'Execução de atos que impulsionam o processo, como o envio para outras instâncias, resposta a ofícios ou o cumprimento de determinações judiciais.',
                 'Cadastro de operações da Policia': 'Permissão para registrar no sistema novas operações policiais, vinculando-as a procedimentos ou inquéritos existentes.',
-                'Redistribui inquerito': 'Ato de transferir a responsabilidade de um inquérito policial de um usuário ou setor para outro dentro da mesma entidade ou para outra localidade.',
-                'Cadastro de permissão/negação expressa': 'Funcionalidade para conceder ou revogar, de forma individualizada, o acesso de um usuário a um processo específico, sobrepondo-se às regras gerais de permissão.',
+                'Redistribuição de inquérito': 'Ato de transferir a responsabilidade de um inquérito policial de um usuário ou setor para outro dentro da mesma entidade ou para outra localidade.',
+                'Cadastro de permissão/negação expressa': 'Funcionalidade para conceder ou revogar, de forma individualizada, o acesso de um usuário a um processo ou documento específico, sobrepondo-se às regras gerais de permissão.',
                 'Relatórios': 'Habilidade de extrair dados do sistema em formato de relatório, como listas de processos por período, por usuário, ou relatórios de produtividade e movimentação.'
             };
 
